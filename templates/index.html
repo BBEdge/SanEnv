@@ -1,5 +1,34 @@
-{% extends 'base.html' %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-{% block content %}
-    <h1>{% block title %} Welcome to FlaskBlog {% endblock %}</h1>
-{% endblock %}
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <title>{% block title %} {% endblock %}</title>
+    </head>
+    <body>
+        <div class='container'>
+            <div class="alert alert-success" role="alert" style='width: 80%; margin-left: 100px;'>
+                <strong>Типы комматоров Brocade</strong>
+            </div>
+            <table class='table table-hover' style='margin-left: 100px; margin-right: 100px; width: 80%;'>
+                <thead><tr>
+                    <th>ID</th>
+                    <th>DESC</th>
+                    <th>IMAGE</th>
+                </tr></thead>
+                {% for line in results %}
+                <tr>
+                    <td>{{line[0]}}</td>
+                    <td>{{line[1]}}</td>
+                    <td>{{line[2]}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </body>
+</html>
