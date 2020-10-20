@@ -56,16 +56,20 @@ def main():
 
                     ''' get date from file name '''
                     datess = re.findall(r'(?<=\_)\d+', files)
-                    fileout = os.path.join(output, ''.join(datess)) + '.out'
-#                    print(fileout)
-#                    print('Waiting for processing supportsave {}'.format(*switch))
 
-                    ''' find ACP '''
+                    ''' get ACP '''
                     for ssfiles in f:
                         if re.findall(r'\w*\S*(S\dcp)\-\d+.SSHOW_PORT.txt.gz', ssfiles):
                             acp = re.findall(r'(?<=\-)\S\dcp', ssfiles)
                             gzfiles = extract_files(zip, switch, datess, f, tempdir, acp, sshowfiles)
 #                            print(gzfiles)
+
+                    ''' parse switchshow '''
+                    for item in gzfiles:
+                        if item[2] in sshowfiles[0]:
+                            #switchinfo = SshowSys.parse_switchinfo(switch, item[3])
+                            switchinfo = SshowSys.switch(switch, item[3])
+
 
                     ''' parse alias '''
                     for item in gzfiles:
@@ -79,7 +83,7 @@ def main():
 #                            print(switch, datess, sshowfiles[0])
                             ''' switch, datess, sshowfiles[0] '''
 #                            switchshow = SshowSys.parse_switchshow(item[0], item[1], item[3])
-                            switchshow = SshowSys.parse_switchshow(item[3])
+                            switchshow = SshowSys.parse_switchshow(switch, item[3])
 
                     ''' parce porterrshow '''
                     for item in gzfiles:

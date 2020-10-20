@@ -32,4 +32,8 @@ CREATE TABLE m_n (
    ...
 );
 
-# 
+# IF SWITCSHOW
+(?=switchshow:)switchshow|(?=switchshow\s)switchshow
+
+# END
+^(?=real)real

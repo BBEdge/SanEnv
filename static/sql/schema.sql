@@ -37,13 +37,13 @@ CREATE TABLE IF NOT EXISTS switch(
 CREATE TABLE IF NOT EXISTS ports_status(
     switch_id int not null references switch(switch_id),
     p_date character varying(16),
-    p_index int,
-    p_slop int,
-    p_port int,
-    p_addr character varying(6),
-    p_speed character varying(3),
-    p_state character varying(8),
-    p_proto character varying(20)
+    p_index int not null,
+    p_slop int not null,
+    p_port int not null,
+    p_addr character varying(6) not null,
+    p_speed int not null,
+    p_state character varying(8) not null,
+    p_proto character varying(100)
 )
 
 -- DROP TABLE IF EXISTS port_errors
