@@ -32,7 +32,7 @@ CREATE TABLE m_n (
    ...
 );
 
-# IF SWITCSHOW
+# IF SWITCHSHOW
 (?=switchshow:)switchshow|(?=switchshow\s)switchshow
 
 # END
