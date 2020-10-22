@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS swtypes;
+-- DROP TABLE IF EXISTS swtypes;
 
 CREATE TABLE IF NOT EXISTS swtypes(
     sw_type_id int not null primary key,
@@ -22,18 +22,19 @@ INSERT INTO swtypes (sw_type_id, sw_type_desc, sw_type_image) VALUES (166, 'X6-8
 
 SELECT * FROM swtypes;
 
--- DROP TABLE IF EXISTS switch
+-- DROP TABLE IF EXISTS switch;
 CREATE TABLE IF NOT EXISTS switch(
-    switch_id int not null primary key,
+    switch_id BIGSERIAL not null primary key,
+    sw_date date NOT NULL,
     sw_name character varying(16) not null,
     sw_type int not null,
     sw_domain int not null ,
-    sw_id character varying(6) not null,
+    sw_id character varying(6) UNIQUE not null,
     sw_wwn character varying(24) not null,
     sw_fid character varying(3)
 )
 
--- DROP TABLE IF EXISTS ports_status
+-- DROP TABLE IF EXISTS ports_status;
 CREATE TABLE IF NOT EXISTS ports_status(
     switch_id int not null references switch(switch_id),
     p_date character varying(16),
@@ -46,7 +47,7 @@ CREATE TABLE IF NOT EXISTS ports_status(
     p_proto character varying(100)
 )
 
--- DROP TABLE IF EXISTS port_errors
+-- DROP TABLE IF EXISTS port_errors;
 CREATE TABLE IF NOT EXISTS port_errors(
     switch_id int not null references switch(switch_id),
     p_date character varying(16),
@@ -72,17 +73,34 @@ CREATE TABLE IF NOT EXISTS port_errors(
     p_ucor_err character varying(16)
 )
 
--- DROP TABLE IF EXISTS zones
+-- DROP TABLE IF EXISTS zones;
 CREATE TABLE IF NOT EXISTS zones(
     zones_id int primary key,
     z_date character varying(16),
     z_name character varying(50)
 )
 
--- DROP TABLE IF EXISTS alias
+-- DROP TABLE IF EXISTS alias;
 CREATE TABLE IF NOT EXISTS alias(
     zoning_id int not null references zones(zones_id),
     a_date character varying(16),
     a_name character varying(50),
     a_wwn character varying(24)
 )
+
+--
+sql = "INSERT INTO switch (sw_name,sw_type,sw_domain,sw_id,sw_wwn) " \
+"VALUES (%(str)s,%(int)s,%(int)s,%(str)s,%(str)s) RETURNING switch_id", \
+{'str':switchinfo[0], 'int':switchinfo[1], 'int':switchinfo[2], 'str':switchinfo[3], 'str':switchinfo[4]}
+
+
+--
+create user user_name with password 'password';
+alter role user_name set client_encoding to 'utf8';
+alter role user_name set default_transaction_isolation to 'read committed';
+alter role user_name set timezone to 'UTC';
+
+--
+ datetime.date(2005, 11, 18) = 2005-11-18
+['2020 03 24 0220']
+['2020 04 28 0220']

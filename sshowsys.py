@@ -1,15 +1,23 @@
 import re
 import gzip
-
+import dbhelper
+import datetime
 
 class SshowSys:
 
-    def switch(self, sshowfile):
+    def parse_switchinfo(self, datess, sshowfile):
         skip = True
         switch = ''.join(self)
+        sw_fid = '128'
         switchinfo = []
         sw_dict = {}
 
+        ''' date formating '''
+        tmp = ', '.join(datess)
+        datess = tmp[0:4] + '-' + tmp[4:6] + '-' + tmp[6:8]
+#        print(datess)
+
+        ''' open file to parsing '''
         with gzip.open(sshowfile, 'rt', encoding='utf8', errors='ignore') as f:
             for line in f:
                 uline = line.strip()
@@ -17,44 +25,50 @@ class SshowSys:
 
                 sw_name = re.search(r'(?<=switchName\:\s).*', uline)
                 if sw_name:
-#                    switchinfo.append(sw_name.group(0))
                     sw_dict['sw_name'] = sw_name.group(0)
-#                    switchinfo.insert(sw_dict)
-#                    switchinfo.append(sw_dict)
-#                    switchinfo.append(sw_name.group(0))
+                    switchinfo.append(sw_name.group(0))
 
                 sw_type = re.search(r'(?<=switchType\:\s)\d{1,3}', uline)
                 if sw_type:
-#                    switchinfo.append(sw_type.group(0))
                     sw_dict['sw_type'] = sw_type.group(0)
-#                    switchinfo.append(sw_dict)
+                    switchinfo.append(sw_type.group(0))
 
                 sw_domain = re.search(r'(?<=switchDomain\:\s)\d{1,3}', uline)
                 if sw_domain:
-#                    switchinfo.append(sw_domain.group(0))
                     sw_dict['sw_domain'] = sw_domain.group(0)
-#                    switchinfo.append(sw_dict)
+                    switchinfo.append(sw_domain.group(0))
 
                 sw_id = re.search(r'(?<=switchId\:\s).*', uline)
                 if sw_id:
-#                    switchinfo.append(sw_id.group(0))
                     sw_dict['sw_id'] = sw_id.group(0)
-#                    switchinfo.append(sw_dict)
+                    switchinfo.append(sw_id.group(0))
 
                 sw_wwn = re.search(r'(?<=switchWwn\:\s).*', uline)
                 if sw_wwn:
-#                    switchinfo.append(sw_wwn.group(0))
                     sw_dict['sw_wwn'] = sw_wwn.group(0)
-#                    switchinfo.append(sw_dict)
+                    switchinfo.append(sw_wwn.group(0))
 
                 sw_fid = re.search(r'(?<=FID\:\s)\d{1,3}', uline)
                 if sw_fid:
-#                    switchinfo.append(sw_fid.group(0))
-                    sw_dict['sw_fid'] = sw_fid.group(0)
-#                    switchinfo.append(sw_dict)
+                    sw_fid = sw_fid.group(0)
 
-            switchinfo = sw_dict
-            print(switchinfo)
+
+            print(switchinfo, sw_fid)
+#                    break
+
+            '''  '''
+#            sql = "INSERT INTO switch (sw_date,sw_name,sw_type,sw_domain,sw_id,sw_wwn,sw_fid) " \
+#                  "VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING switch_id" % ("'" + datess + "'",
+#                                                                      "'" + switchinfo[0] + "'",
+#                                                                      switchinfo[1],
+#                                                                      switchinfo[2],
+#                                                                      "'" + switchinfo[3] + "'",
+#                                                                      "'" + switchinfo[4] + "'",
+#                                                                      "'" + sw_fid + "'")
+
+#            print(sql)
+#            switch_id = dbhelper.db_insert(sql)
+
 
 
     def parse_alias(self, datess, sshowfile):
@@ -68,65 +82,6 @@ class SshowSys:
                     alias.append(words)
 
         return alias
-
-
-    def parse_switchinfo(self, sshowfile,):
-        skip = True
-        switch = ''.join(self)
-        switchinfo = []
-        sw_dict = {}
-
-        with gzip.open(sshowfile, 'rt', encoding='utf8', errors='ignore') as f:
-            for line in f:
-                uline = line.strip()
-                words = uline.split()
-
-                if skip:
-                    key = re.search(r'(?<=switchName\:\s).*', uline)
-                    if key:
-                        skip = False
-
-                        sw_name = re.search(r'(?<=switchName\:\s).*', uline)
-                        if sw_name:
-                            switchinfo.append(sw_name.group(0))
-                            sw_dict['switch'] = sw_name.group(0)
-#                            switchinfo.append(sw_dict)
-
-                        sw_type = re.search(r'(?<=switchType\:\s)\d{1,3}', uline)
-                        if sw_type:
-                            switchinfo.append(sw_type.group(0))
-                            sw_dict['sw_type'] = sw_type.group(0)
-#                        switchinfo.append(sw_dict)
-
-                        sw_domain = re.search(r'(?<=switchDomain\:\s)\d{1,3}', uline)
-                        if sw_domain:
-                            switchinfo.append(sw_domain.group(0))
-                            sw_dict['sw_domain'] = sw_domain.group(0)
-#                           switchinfo.append(sw_dict)
-
-                        sw_id = re.search(r'(?<=switchId\:\s).*', uline)
-                        if sw_id:
-                            switchinfo.append(sw_id.group(0))
-                            sw_dict['sw_id'] = sw_id.group(0)
-#                           switchinfo.append(sw_dict)
-
-                        sw_wwn = re.search(r'(?<=switchWwn\:\s).*', uline)
-                        if sw_wwn:
-                            switchinfo.append(sw_wwn.group(0))
-                            sw_dict['sw_wwn'] = sw_wwn.group(0)
-#                           switchinfo.append(sw_dict)
-
-                        sw_fid = re.search(r'(?<=FID\:\s)\d{1,3}', uline)
-                        if sw_fid:
-                            switchinfo.append(sw_fid.group(0))
-
-                        skip = True
-#
-            print(switchinfo)
-
-#        temp[switch] = switchinfo
-#        print(sw_dict)
-#        print(temp)
 
 
     def parse_switchshow(self, sshowfile):

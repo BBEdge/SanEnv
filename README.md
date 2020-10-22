@@ -33,7 +33,10 @@ CREATE TABLE m_n (
 );
 
 # IF SWITCHSHOW
-(?=switchshow:)switchshow|(?=switchshow\s)switchshow
+^/fabos/bin/switchshow:|^/fabos/bin/switchshow :|^switchshow:
 
 # END
 ^(?=real)real
+
+# VF | Non-VF
+^(?:VF)|^(?:Non-VF)

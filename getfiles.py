@@ -5,7 +5,7 @@ import shutil
 import tempfile
 import zipfile
 from sshowsys import SshowSys
-
+import dbhelper
 
 def extract_files(zip, switch, datess, ssfiles, tempdir, acp, sshowfiles):
     switch = ''.join(switch)
@@ -33,7 +33,10 @@ def main():
     dinput = '/tmp/ss'
     output = '/tmp/out'
 
+    ''' innit connection to db '''
+#    conn = dbhelper.db_connect()
 
+    ''' get files and parsing '''
     try:
         if os.path.isdir(dinput) and fnmatch.filter(os.listdir(dinput), '*.zip'):
             with tempfile.TemporaryDirectory() as tempdir:
@@ -62,34 +65,30 @@ def main():
                         if re.findall(r'\w*\S*(S\dcp)\-\d+.SSHOW_PORT.txt.gz', ssfiles):
                             acp = re.findall(r'(?<=\-)\S\dcp', ssfiles)
                             gzfiles = extract_files(zip, switch, datess, f, tempdir, acp, sshowfiles)
-#                            print(gzfiles)
+
+                    ''' parse switchinfo '''
+                    for item in gzfiles:
+                        if item[2] in sshowfiles[0]:
+                            ''' switch, sshowfiles '''
+                            switchinfo = SshowSys.parse_switchinfo(switch, datess, item[3])
 
                     ''' parse switchshow '''
                     for item in gzfiles:
                         if item[2] in sshowfiles[0]:
-                            #switchinfo = SshowSys.parse_switchinfo(switch, item[3])
-                            switchinfo = SshowSys.switch(switch, item[3])
-
-
-                    ''' parse alias '''
-                    for item in gzfiles:
-                        if item[2] in sshowfiles[0]:
-                            alias = SshowSys.parse_alias(item[0], item[1], item[3])
-#                        return alias
-
-                    ''' parse switchshow '''
-                    for item in gzfiles:
-                        if item[2] in sshowfiles[0]:
-#                            print(switch, datess, sshowfiles[0])
-                            ''' switch, datess, sshowfiles[0] '''
-#                            switchshow = SshowSys.parse_switchshow(item[0], item[1], item[3])
+                            ''' switch, sshowfiles '''
                             switchshow = SshowSys.parse_switchshow(switch, item[3])
 
                     ''' parce porterrshow '''
                     for item in gzfiles:
                         if item[2] in sshowfiles[0]:
-#                            print(switch, datess, sshowfiles[1])
+                            ''' switch, datess, sshowfiles '''
                             porterrshow = SshowSys.parse_porterrshow(item[0], item[1], item[3])
+
+                    ''' parse alias '''
+                    for item in gzfiles:
+                        if item[2] in sshowfiles[0]:
+                            ''' switch, datess, sshowfiles '''
+                            alias = SshowSys.parse_alias(item[0], item[1], item[3])
 
             try:
                 shutil.rmtree(tempdir)
@@ -103,6 +102,7 @@ def main():
     except FileNotFoundError as e:
         print(e)
 
+ #   dbhelper.db_close(conn)
 
 if __name__ == '__main__':
     main()
