@@ -1,26 +1,17 @@
 import re
 import gzip
 
-#global switchinfo
-#global sw_dict
-#switchinfo = []
-#sw_dict = {}
 
-def get_swinfo(self, datess, sshowfile):
+def get_swinfo(switchname, datess, sshowfile):
     skip = True
-    switchname = ''.join(self)
+    switchname = ''.join(switchname)
     switchinfo = []
     sw_dict = {}
-
-    ''' date formating '''
-    tmp = ', '.join(datess)
-    datess = tmp[0:4] + '-' + tmp[4:6] + '-' + tmp[6:8]
 
     ''' open file to parsing '''
     with gzip.open(sshowfile, 'rt', encoding='utf8', errors='ignore') as f:
         for line in f:
             uline = line.strip()
-            words = uline.split()
 
             if skip:
                 key = re.search(r'(?=switchshow\:)|(?=switchshow\s\:)|(?=switchshow\s*\:)', uline)
@@ -58,12 +49,9 @@ def get_swinfo(self, datess, sshowfile):
                     fid = ''.join(sw_fid.group(0))
                     if fid == '128':
                         switchinfo.append('128')
-                        #return switchinfo
                     else:
                         switchinfo.append(sw_fid.group(0))
-                        #return switchinfo
 
-                #return switchinfo
                 key = re.search(r'========================', uline)
                 if key:
                     skip = True
@@ -73,5 +61,10 @@ def get_swinfo(self, datess, sshowfile):
         if len(switchinfo) == 5:
             switchinfo.insert(len(switchinfo), '128')
 
-        print(switchinfo)
+        ''' Break a list into chunks of size N '''
+        if len(switchinfo) > 6:
+            n = 6
+            switchinfo = [switchinfo[i * n:(i + 1) * n] for i in range((len(switchinfo) + n - 1) // n )]
 
+        print(switchinfo)
+        return switchinfo

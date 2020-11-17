@@ -7,6 +7,7 @@ import zipfile
 from sshowsys import SshowSys
 import dbhelper
 import switchinfo
+import portinfo
 
 def extract_files(zip, switch, datess, ssfiles, tempdir, acp, sshowfiles):
     switch = ''.join(switch)
@@ -67,18 +68,25 @@ def main():
                             acp = re.findall(r'(?<=\-)\S\dcp', ssfiles)
                             gzfiles = extract_files(zip, switch, datess, f, tempdir, acp, sshowfiles)
 
+                    ''' date formating '''
+                    tmp = ', '.join(datess)
+                    datess = tmp[0:4] + '-' + tmp[4:6] + '-' + tmp[6:8]
+
                     ''' parse switchinfo '''
                     for item in gzfiles:
                         if item[2] in sshowfiles[0]:
-                            ''' switch, sshowfiles '''
+                            ''' switch, datess, sshowfiles '''
                             # switchinfo = SshowSys.parse_switchinfo(switch, datess, item[3])
-                            swinfo = switchinfo.get_swinfo(switch, datess, item[3])
+                            #swinfo = switchinfo.get_swinfo(switch, datess, item[3])
+                            pass
 
-                    ''' parse switchshow '''
+                    ''' parse portinfo '''
                     for item in gzfiles:
                         if item[2] in sshowfiles[0]:
-                            ''' switch, sshowfiles '''
-                            switchshow = SshowSys.parse_switchshow(switch, item[3])
+                            ''' switch, datess, sshowfiles '''
+                            #portinfo = SshowSys.parse_switchshow(switch, item[3])
+                            pinfo =  portinfo.get_portinfo(switch, datess, item[3])
+                            #pass
 
                     ''' parce porterrshow '''
                     for item in gzfiles:

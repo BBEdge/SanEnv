@@ -91,7 +91,6 @@ class SshowSys:
                         words[4] = ' '.join(speed)
                         words[6] = ' '.join(str(e) for e in words[6:])
 #                        del(words[7:]) '''proto'''
-
 #                        print('{:6s} {:7s} {:9s} {:6s} {:12s} {} {}'.format(*words))
 
                         switchshow.append(words)
