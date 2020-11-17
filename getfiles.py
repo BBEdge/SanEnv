@@ -6,6 +6,7 @@ import tempfile
 import zipfile
 from sshowsys import SshowSys
 import dbhelper
+import switchinfo
 
 def extract_files(zip, switch, datess, ssfiles, tempdir, acp, sshowfiles):
     switch = ''.join(switch)
@@ -70,7 +71,8 @@ def main():
                     for item in gzfiles:
                         if item[2] in sshowfiles[0]:
                             ''' switch, sshowfiles '''
-                            switchinfo = SshowSys.parse_switchinfo(switch, datess, item[3])
+                            # switchinfo = SshowSys.parse_switchinfo(switch, datess, item[3])
+                            swinfo = switchinfo.get_swinfo(switch, datess, item[3])
 
                     ''' parse switchshow '''
                     for item in gzfiles:

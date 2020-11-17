@@ -2,15 +2,13 @@ import re
 import gzip
 import dbhelper
 import datetime
+import switchinfo
 
 class SshowSys:
-
+    sw = []
     def parse_switchinfo(self, datess, sshowfile):
         skip = True
         switch = ''.join(self)
-        sw_fid = '128'
-        switchinfo = []
-        sw_dict = {}
 
         ''' date formating '''
         tmp = ', '.join(datess)
@@ -23,40 +21,22 @@ class SshowSys:
                 uline = line.strip()
                 words = uline.split()
 
-                sw_name = re.search(r'(?<=switchName\:\s).*', uline)
-                if sw_name:
-                    sw_dict['sw_name'] = sw_name.group(0)
-                    switchinfo.append(sw_name.group(0))
+                if skip:
+                    key = re.search(r'(?=switchshow\:)|(?=switchshow\s\:)|(?=switchshow\s*\:)', uline)
+                    if key:
+                        skip = False
+                        print('KEY: False')
 
-                sw_type = re.search(r'(?<=switchType\:\s)\d{1,3}', uline)
-                if sw_type:
-                    sw_dict['sw_type'] = sw_type.group(0)
-                    switchinfo.append(sw_type.group(0))
+                else:
+                    sw = switchinfo.get_swinfo(uline)
+                    key = re.search(r'========================', uline)
+                    if key:
+                        skip = True
+                        print('KEY: True')
 
-                sw_domain = re.search(r'(?<=switchDomain\:\s)\d{1,3}', uline)
-                if sw_domain:
-                    sw_dict['sw_domain'] = sw_domain.group(0)
-                    switchinfo.append(sw_domain.group(0))
+                    print(sw)
 
-                sw_id = re.search(r'(?<=switchId\:\s).*', uline)
-                if sw_id:
-                    sw_dict['sw_id'] = sw_id.group(0)
-                    switchinfo.append(sw_id.group(0))
-
-                sw_wwn = re.search(r'(?<=switchWwn\:\s).*', uline)
-                if sw_wwn:
-                    sw_dict['sw_wwn'] = sw_wwn.group(0)
-                    switchinfo.append(sw_wwn.group(0))
-
-                sw_fid = re.search(r'(?<=FID\:\s)\d{1,3}', uline)
-                if sw_fid:
-                    sw_fid = sw_fid.group(0)
-
-
-            print(switchinfo, sw_fid)
-#                    break
-
-            '''  '''
+        '''  '''
 #            sql = "INSERT INTO switch (sw_date,sw_name,sw_type,sw_domain,sw_id,sw_wwn,sw_fid) " \
 #                  "VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING switch_id" % ("'" + datess + "'",
 #                                                                      "'" + switchinfo[0] + "'",
