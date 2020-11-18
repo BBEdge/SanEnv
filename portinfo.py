@@ -36,12 +36,14 @@ def get_portinfo(switchname, datess, sshowfile):
                     words[6] = ' '.join(str(e) for e in words[6:])
                     del (words[7:]) #proto
                     words.extend(datess.split())
-                    words.extend(fid.split())
-                    print('{:6s} {:7s} {:9s} {:6s} {:12s} {} {} {} {}'.format(*words))
+                    print('{:6s} {:7s} {:9s} {:6s} {:12s} {} {} {}'.format(*words))
+                    #words.extend(fid.split())
+                    #print('{:6s} {:7s} {:9s} {:6s} {:12s} {} {} {} {}'.format(*words))
 
                     portinfo.append(words)
 
-                key = re.search(r'(?=SS CMD END)', uline)
+                #key = re.search(r'(?=SS CMD END)', uline) # (?<=^real)
+                key = re.search(r'(?<=^real)', uline)  # (?<=^real)
                 if key:
                     skip = True
                     #print('KEY: True')

@@ -46,11 +46,12 @@ def get_swinfo(switchname, datess, sshowfile):
 
                 sw_fid = re.search(r'(?<=FID\:\s)\d{1,3}', uline)
                 if sw_fid:
-                    fid = ''.join(sw_fid.group(0))
-                    if fid == '128':
-                        switchinfo.append('128')
-                    else:
-                        switchinfo.append(sw_fid.group(0))
+                    #fid = ''.join(sw_fid.group(0))
+                    #if fid == '128':
+                        #switchinfo.append('128')
+                        #switchinfo.append(sw_fid.group(0))
+                    #else:
+                    switchinfo.append(sw_fid.group(0))
 
                 key = re.search(r'========================', uline)
                 if key:
@@ -58,13 +59,15 @@ def get_swinfo(switchname, datess, sshowfile):
                     #print('KEY: True')
 
         ''' add default FID if not found '''
-        if len(switchinfo) == 5:
-            switchinfo.insert(len(switchinfo), '128')
+        if not sw_fid:
+            print('FID: none')
+        #if len(switchinfo) == 5:
+            #switchinfo.insert(len(switchinfo), '128')
 
         ''' Break a list into chunks of size N '''
         if len(switchinfo) > 6:
             n = 6
-            switchinfo = [switchinfo[i * n:(i + 1) * n] for i in range((len(switchinfo) + n - 1) // n )]
+            switchinfo = [switchinfo[i * n:(i + 1) * n] for i in range((len(switchinfo) + n - 1) // n)]
 
         print(switchinfo)
         return switchinfo

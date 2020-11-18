@@ -8,6 +8,7 @@ from sshowsys import SshowSys
 import dbhelper
 import switchinfo
 import portinfo
+import porterror
 
 def extract_files(zip, switch, datess, ssfiles, tempdir, acp, sshowfiles):
     switch = ''.join(switch)
@@ -77,22 +78,24 @@ def main():
                         if item[2] in sshowfiles[0]:
                             ''' switch, datess, sshowfiles '''
                             # switchinfo = SshowSys.parse_switchinfo(switch, datess, item[3])
-                            #swinfo = switchinfo.get_swinfo(switch, datess, item[3])
-                            pass
+                            swinfo = switchinfo.get_swinfo(switch, datess, item[3])
+                            #pass
 
                     ''' parse portinfo '''
                     for item in gzfiles:
                         if item[2] in sshowfiles[0]:
                             ''' switch, datess, sshowfiles '''
                             #portinfo = SshowSys.parse_switchshow(switch, item[3])
-                            pinfo =  portinfo.get_portinfo(switch, datess, item[3])
-                            #pass
+                            #pinfo =  portinfo.get_portinfo(switch, datess, item[3])
+                            pass
 
-                    ''' parce porterrshow '''
+                    ''' parce porterror '''
                     for item in gzfiles:
                         if item[2] in sshowfiles[0]:
                             ''' switch, datess, sshowfiles '''
-                            porterrshow = SshowSys.parse_porterrshow(item[0], item[1], item[3])
+                            #porterrshow = SshowSys.parse_porterrshow(item[0], datess, item[3])
+                            #porterrshow = porterror.get_porterror(switch, datess, item[3])
+                            pass
 
                     ''' parse alias '''
                     for item in gzfiles:
